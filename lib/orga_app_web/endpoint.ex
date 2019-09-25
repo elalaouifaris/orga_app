@@ -42,5 +42,7 @@ defmodule OrgaAppWeb.Endpoint do
     key: "_orga_app_key",
     signing_salt: "8FL/SUXy"
 
+  plug Pow.Plug.Session, otp_app: :orga_app
+
   plug OrgaAppWeb.Router
 end
