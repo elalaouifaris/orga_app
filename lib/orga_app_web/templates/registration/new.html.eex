@@ -1,0 +1,17 @@
+<%= form_for @changeset, Routes.signup_path(@conn, :create), fn f -> %>
+  <%= text_input f, :name %>
+
+  <%= inputs_for f, :users, [default: %OrgaApp.Users.User{}], fn f_user -> %>
+    <%= label f_user, :email, "email" %>
+    <%= email_input f_user, :email %>
+    <%= error_tag f_user, :email %>
+
+    <%= label f_user, :password, "password" %>
+    <%= password_input f_user, :password %>
+    <%= error_tag f_user, :password %>
+
+    <%= label f_user, :confirm_password, "confirm_password" %>
+    <%= password_input f_user, :confirm_password %>
+    <%= error_tag f_user, :confirm_password %>
+  <% end %>
+<% end %>

@@ -16,18 +16,27 @@ defmodule OrgaAppWeb.Router do
 
   pipeline :protected do
     plug Pow.Plug.RequireAuthenticated,
-      error_handler: Pow.Phoenix.PlugErrorHandler
+      error_handler: OrgaAppWeb.AuthErrorHandler
   end
 
-  scope "/" do
-    pipe_through :browser
+   pipeline :not_authenticated do
+    plug Pow.Plug.RequireNotAuthenticated,
+      error_handler: OrgaAppWeb.AuthErrorHandler
+  end
 
-    pow_routes()
+  scope "/", OrgaAppWeb do
+    pipe_through [:browser, :not_authenticated]
+
+    get "/signup", RegistrationController, :new, as: :signup
+    post "/signup", RegistrationController, :create, as: :signup
+    get "/login", SessionController, :new, as: :login
+    post "/login", SessionController, :create, as: :login
   end
 
   scope "/", OrgaAppWeb do
     pipe_through [:browser, :protected]
 
+    delete "/logout", SessionController, :delete, as: :logout
     get "/", PageController, :index
   end
 
