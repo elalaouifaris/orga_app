@@ -1,4 +1,4 @@
-defmodule OrgaAppWeb.RegistrationController do
+defmodule OrgaAppWeb.OrganizationController do
   use OrgaAppWeb, :controller
 
   alias OrgaApp.{Organizations.Organization, Repo}

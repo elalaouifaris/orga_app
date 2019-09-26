@@ -1,4 +1,4 @@
-<%= form_for @changeset, Routes.signup_path(@conn, :create), fn f -> %>
+<%= form_for @changeset, Routes.organization_path(@conn, :create), fn f -> %>
   <%= text_input f, :name %>
 
   <%= inputs_for f, :users, [default: %OrgaApp.Users.User{}], fn f_user -> %>
