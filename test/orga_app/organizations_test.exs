@@ -6,7 +6,8 @@ defmodule OrgaApp.OrganizationsTest do
   describe "organizations" do
     alias OrgaApp.Organizations.Organization
 
-    @valid_attrs %{name: "some name"}
+    @valid_attrs %{name: "some name",
+                   users: [%{email: "test@me.com", password: "secret1234", confirm_password: "secret1234"}]}
     @update_attrs %{name: "some updated name"}
     @invalid_attrs %{name: nil}
 
@@ -16,17 +17,31 @@ defmodule OrgaApp.OrganizationsTest do
         |> Enum.into(@valid_attrs)
         |> Organizations.create_organization()
 
-      organization
+      [user] = organization.users
+      user = user
+        |> Map.replace!(:password, nil)
+        |> Map.replace!(:confirm_password, nil)
+      
+      %Organization{organization | users: [user]}
     end
 
     test "list_organizations/0 returns all organizations" do
       organization = organization_fixture()
-      assert Organizations.list_organizations() == [organization]
+
+      organization_list = Organizations.list_organizations()
+        |> Enum.map(fn org -> OrgaApp.Repo.preload(org, :users) end)
+
+      assert organization_list == [organization]
     end
 
     test "get_organization!/1 returns the organization with given id" do
       organization = organization_fixture()
-      assert Organizations.get_organization!(organization.id) == organization
+
+      stored_organization = organization.id
+        |> Organizations.get_organization!
+        |> OrgaApp.Repo.preload(:users)
+
+      assert stored_organization == organization
     end
 
     test "create_organization/1 with valid data creates a organization" do
@@ -46,8 +61,13 @@ defmodule OrgaApp.OrganizationsTest do
 
     test "update_organization/2 with invalid data returns error changeset" do
       organization = organization_fixture()
+
+      stored_organization = organization.id
+        |> Organizations.get_organization!
+        |> OrgaApp.Repo.preload(:users)
+
       assert {:error, %Ecto.Changeset{}} = Organizations.update_organization(organization, @invalid_attrs)
-      assert organization == Organizations.get_organization!(organization.id)
+      assert organization == stored_organization
     end
 
     test "delete_organization/1 deletes the organization" do
