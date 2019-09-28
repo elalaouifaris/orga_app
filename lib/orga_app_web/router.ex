@@ -1,6 +1,7 @@
 defmodule OrgaAppWeb.Router do
   use OrgaAppWeb, :router
   use Pow.Phoenix.Router
+  use Pow.Extension.Phoenix.Router, otp_app: :orga_app
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -29,6 +30,7 @@ defmodule OrgaAppWeb.Router do
     pipe_through :browser
 
     pow_routes()
+    pow_extension_routes()
   end
 
   scope "/", OrgaAppWeb do
