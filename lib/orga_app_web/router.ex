@@ -19,6 +19,12 @@ defmodule OrgaAppWeb.Router do
       error_handler: Pow.Phoenix.PlugErrorHandler
   end
 
+  scope "/", OrgaAppWeb do
+    pipe_through [:browser]
+
+    resources "/registration", OrganizationController, singleton: true, only: [:new, :create] 
+  end
+
   scope "/" do
     pipe_through :browser
 
