@@ -4,7 +4,7 @@ defmodule OrgaApp.Users.User do
   use Pow.Extension.Ecto.Schema,
     extensions: [PowResetPassword, PowEmailConfirmation, PowInvitation]
 
-  alias OrgaApp.Users.User
+  alias OrgaApp.Organizations.Organization
 
   schema "users" do
     belongs_to :organization, Organization
